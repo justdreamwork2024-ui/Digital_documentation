@@ -17,29 +17,26 @@
             background-color: #cbd5e1;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
             color: #000;
         }
-        .report-page {
+        /* حاوية التقرير */
+        .report-wrapper {
             width: 210mm;
-            height: 297mm;
-            padding: 12mm 15mm;
-            background: white;
-            box-sizing: border-box;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            min-height: 297mm;
             margin: 20px auto;
-            color: #000;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: 15mm;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            position: relative;
         }
         
         .header-text {
-            line-height: 1.8; 
+            line-height: 1.6; 
             font-size: 16px;
             font-weight: bold;
-            color: #000;
             text-align: center;
         }
 
@@ -54,28 +51,24 @@
             background-color: var(--edu-blue);
             color: white;
             border: 1px solid white;
-            padding: 0;
+            padding: 4px;
             font-size: 16px; 
             font-weight: bold;
-            height: 40px;
-            vertical-align: middle;
         }
 
         .edu-table-main td {
             background-color: #e2e8f0; 
             border: 1px solid white;
-            padding: 4px;
-            height: 40px;
+            padding: 8px;
             text-align: center;
             font-size: 16px;
-            color: #000;
-            vertical-align: middle;
         }
 
         .side-section {
             display: flex;
             flex-direction: column;
-            margin-top: 8px;
+            margin-top: 10px;
+            page-break-inside: avoid;
         }
         
         .side-label {
@@ -87,35 +80,23 @@
             font-weight: bold;
             font-size: 15px;
             border-radius: 4px 0 0 4px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2px;
         }
 
         .side-content {
-            padding: 8px 10px;
-            font-size: 15px;
-            line-height: 1.4;
-            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            line-height: 1.6;
             border-bottom: 1px solid #e2e8f0;
-            width: 100%;
-            min-height: 40px;
-            color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            word-break: break-word;
+            min-height: 45px;
+            text-align: justify;
         }
 
-        /* شبكة الصور الموحدة */
         .evidence-grid {
             display: grid;
-            gap: 10px;
-            width: 100%;
-            justify-content: center;
-            margin-top: 5px;
+            gap: 12px;
             grid-template-columns: repeat(4, 120px); 
+            justify-content: center;
+            margin-top: 10px;
         }
         
         .evidence-item {
@@ -124,7 +105,6 @@
             border: 1px solid #cbd5e1;
             border-radius: 4px;
             overflow: hidden;
-            background: white;
         }
         
         .evidence-item img {
@@ -134,18 +114,18 @@
         }
 
         .signature-area {
-            margin-top: auto; 
+            margin-top: 40px; 
             display: flex;
             justify-content: flex-start;
-            padding-bottom: 20px;
+            page-break-inside: avoid;
         }
 
         .footer-line {
             text-align: center;
-            font-size: 10px;
+            font-size: 11px;
             color: #94a3b8;
-            margin-top: 5px;
-            font-family: sans-serif;
+            margin-top: 30px;
+            padding-bottom: 10px;
         }
 
         .no-print { font-family: 'Noto Kufi Arabic', sans-serif; }
@@ -153,242 +133,229 @@
         @media print {
             .no-print { display: none; }
             body { background: white; }
-            .report-page { box-shadow: none; margin: 0; }
+            .report-wrapper { box-shadow: none; margin: 0; width: 100%; }
         }
     </style>
 </head>
-<body class="h-screen overflow-hidden">
+<body class="h-screen overflow-hidden flex">
 
-<div class="flex h-full">
-    
-    <!-- لوحة إدخال البيانات -->
-    <div class="w-[420px] bg-white border-l shadow-xl z-10 overflow-y-auto no-print p-5 text-right">
-        <h2 class="text-lg font-bold mb-4 text-[#248fb2] flex items-center gap-2 border-b pb-3">
-            <span>📝 بيانات التقرير</span>
+    <!-- لوحة التحكم -->
+    <div class="w-[420px] bg-white border-l shadow-xl z-10 overflow-y-auto no-print p-6 text-right">
+        <h2 class="text-xl font-bold mb-6 text-[#248fb2] border-b pb-4 flex items-center gap-2">
+            <span>📝بيانات التقرير</span>
         </h2>
         
-        <div class="space-y-4">
+        <div class="space-y-5">
             <div>
                 <label class="block text-xs font-bold text-gray-600 mb-1">اسم المدرسة</label>
-                <input type="text" id="in-school" class="w-full border border-gray-300 p-2 rounded text-sm focus:border-blue-500 outline-none" placeholder="اكتب اسم المدرسة">
+                <input type="text" id="in-school" class="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-sky-500 outline-none">
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-600 mb-1">عنوان التقرير</label>
-                <input type="text" id="in-title" class="w-full border border-gray-300 p-2 rounded text-sm font-bold text-black">
+                <input type="text" id="in-title" class="w-full border p-2 rounded text-sm font-bold">
             </div>
 
             <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded border border-slate-200">
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">اليوم</label><input type="text" id="in-day" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">التاريخ</label><input type="text" id="in-date" class="w-full border border-gray-300 p-2 rounded text-sm text-black" placeholder="مثال: 1446/08/01"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">مدة التنفيذ</label><input type="text" id="in-duration" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">مكان التنفيذ</label><input type="text" id="in-location" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">المستفيدون</label><input type="text" id="in-target" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">عدد المستفيدين</label><input type="text" id="in-count" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">المجال الإشرافي</label><input type="text" id="in-field" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">نوع الشاهد</label><input type="text" id="in-evidence-type" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
+                <div class="col-span-2 text-[10px] font-bold text-gray-400">البيانات الأساسية</div>
+                <input type="text" id="in-day" class="border p-2 rounded text-xs" placeholder="اليوم">
+                <input type="text" id="in-date" class="border p-2 rounded text-xs" placeholder="التاريخ">
+                <input type="text" id="in-duration" class="border p-2 rounded text-xs" placeholder="مدة التنفيذ">
+                <input type="text" id="in-location" class="border p-2 rounded text-xs" placeholder="المكان">
+                <input type="text" id="in-target" class="border p-2 rounded text-xs" placeholder="المستفيدون">
+                <input type="text" id="in-count" class="border p-2 rounded text-xs" placeholder="العدد">
+                <input type="text" id="in-field" class="border p-2 rounded text-xs" placeholder="المجال">
+                <input type="text" id="in-evidence-type" class="border p-2 rounded text-xs" placeholder="نوع الشاهد">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-gray-600 mb-1">الأهداف</label>
-                <textarea id="in-goals" class="w-full border border-gray-300 p-2 rounded text-xs h-14 text-black"></textarea>
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-gray-600 mb-1">المؤشرات المستهدفة</label>
-                <textarea id="in-indicators" class="w-full border border-gray-300 p-2 rounded text-xs h-14 text-black"></textarea>
+                <textarea id="in-goals" class="w-full border p-2 rounded text-xs h-16"></textarea>
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-600 mb-1">الإجراءات المتخذة</label>
-                <textarea id="in-steps" class="w-full border border-gray-300 p-2 rounded text-xs h-20 text-black"></textarea>
+                <textarea id="in-steps" class="w-full border p-2 rounded text-xs h-32"></textarea>
             </div>
 
-            <div class="bg-sky-50 p-3 rounded-lg border border-sky-100">
-                <label class="block text-xs font-bold text-sky-800 mb-2">الشواهد والمرفقات</label>
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-[10px] text-gray-500 mb-1">رابط الشواهد (سيكون تفاعلياً في PDF)</label>
-                        <input type="url" id="in-evidence-link" class="w-full border border-gray-300 p-2 rounded text-xs text-black" placeholder="https://...">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-500 mb-1">تحميل صور</label>
-                        <input type="file" id="image-upload" accept="image/*" multiple class="text-[10px] w-full bg-white p-1 rounded border">
-                    </div>
-                </div>
+            <div class="bg-sky-50 p-4 rounded-lg border border-sky-100">
+                <label class="block text-xs font-bold text-sky-800 mb-2">الروابط والشواهد</label>
+                <input type="url" id="in-evidence-link" class="w-full border p-2 rounded text-xs mb-3" placeholder="رابط خارجي">
+                <input type="file" id="image-upload" accept="image/*" multiple class="text-[10px] w-full">
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-600 mb-1">اسم المشرف/ة التربوي/ة</label>
-                <input type="text" id="in-supervisor" class="w-full border border-gray-300 p-2 rounded text-sm font-bold text-black">
+                <label class="block text-xs font-bold text-gray-600 mb-1">اسم المشرف/ة</label>
+                <input type="text" id="in-supervisor" class="w-full border p-2 rounded text-sm font-bold">
             </div>
 
-            <button onclick="exportToPDF()" class="w-full bg-[#248fb2] text-white font-bold py-4 rounded-lg hover:bg-sky-700 shadow-md transition-all mt-2 active:scale-95">
-                تصدير التقرير (PDF)
+            <button onclick="exportFlexiblePDF()" class="w-full bg-[#248fb2] text-white font-bold py-4 rounded-lg hover:bg-sky-700 shadow-lg transition-all active:scale-95">
+                تصدير PDF (رسمي)
             </button>
         </div>
     </div>
 
     <!-- مساحة المعاينة -->
-    <div class="flex-1 overflow-y-auto p-4 flex justify-center">
-        <div id="capture-report" class="report-page">
+    <div class="flex-1 overflow-y-auto p-10 flex flex-col items-center">
+        <div id="capture-report" class="report-wrapper">
             
-            <div class="flex flex-col items-center mb-6 border-b-2 border-slate-100 pb-3">
-                <div class="header-text">
-                    <div class="text-[17px]">وزارة التعليم</div>
-                    <div class="text-[17px]">الإدارة العامة للتعليم بمنطقة المدينة المنورة</div>
-                    <div class="mt-1 text-[17px]">المدرسة <span id="out-school" class="font-normal underline underline-offset-4 decoration-slate-300"></span></div>
-                </div>
+            <!-- الهيدر المحدث -->
+            <div class="header-text mb-8">
+                <div>المملكة العربية السعودية</div>
+                <div>وزارة التعليم</div>
+                <div>الإدارة العامة للتعليم بمنطقة المدينة المنورة</div>
+                <div class="mt-1">المدرسة <span id="out-school" class="underline decoration-dotted decoration-sky-300"></span></div>
             </div>
 
-            <div class="text-center mb-6">
-                <h1 id="out-title" class="text-2xl font-bold text-black border-b-2 border-black inline-block px-12 py-1">عنوان التقرير</h1>
+            <!-- العنوان -->
+            <div class="text-center mb-8">
+                <h1 id="out-title" class="text-2xl font-bold border-b-2 border-black inline-block px-12 py-1">عنوان التقرير</h1>
             </div>
 
+            <!-- الجداول -->
             <table class="edu-table-main">
                 <thead>
-                    <tr><th><div>اليوم</div></th><th><div>التاريخ</div></th><th><div>مدة التنفيذ</div></th><th><div>مكان التنفيذ</div></th></tr>
+                    <tr><th>اليوم</th><th>التاريخ</th><th>المدة</th><th>المكان</th></tr>
                 </thead>
                 <tbody>
                     <tr><td id="out-day"></td><td id="out-date"></td><td id="out-duration"></td><td id="out-location"></td></tr>
                 </tbody>
                 <thead>
-                    <tr><th><div>المستفيدون</div></th><th><div>عدد المستفيدين</div></th><th><div>المجال الإشرافي</div></th><th><div>نوع الشاهد</div></th></tr>
+                    <tr><th>المستفيدون</th><th>العدد</th><th>المجال</th><th>نوع الشاهد</th></tr>
                 </thead>
                 <tbody>
                     <tr><td id="out-target"></td><td id="out-count"></td><td id="out-field"></td><td id="out-evidence-type"></td></tr>
                 </tbody>
             </table>
 
+            <!-- الأقسام -->
             <div class="side-section">
                 <div class="side-label">الأهداف</div>
                 <div id="out-goals" class="side-content whitespace-pre-wrap"></div>
             </div>
-            <div class="side-section">
-                <div class="side-label">المؤشرات المستهدفة</div>
-                <div id="out-indicators" class="side-content whitespace-pre-wrap"></div>
-            </div>
-            <div class="side-section" style="flex-grow: 1;">
-                <div class="side-label">الإجراءات المتخذة</div>
-                <div id="out-steps" class="side-content whitespace-pre-wrap" style="align-items: flex-start; text-align: right; padding-top: 10px;"></div>
-            </div>
 
             <div class="side-section">
+                <div class="side-label">الإجراءات المتخذة</div>
+                <div id="out-steps" class="side-content whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- الشواهد -->
+            <div class="side-section">
                 <div class="side-label">المرفقات والشواهد</div>
-                <div class="side-content bg-slate-50 border-dashed border border-slate-200 flex-col gap-2" style="min-height: 160px; padding: 10px;">
-                    <div id="out-evidence-link-container" class="hidden w-full flex justify-center pb-2">
-                        <div class="text-[13px] text-blue-700 font-bold">
-                            <span>🔗 رابط الشواهد:</span>
-                            <span id="out-evidence-link-text" class="underline break-all font-normal"></span>
-                        </div>
+                <div class="side-content bg-slate-50 border-dashed border border-slate-200">
+                    <div id="out-link-box" class="hidden mb-4 text-center">
+                        <span class="font-bold text-blue-700 text-sm">🔗 الرابط: </span>
+                        <span id="out-link-text" class="underline text-blue-600 break-all cursor-pointer"></span>
                     </div>
                     <div id="evidence-container" class="evidence-grid"></div>
                 </div>
             </div>
 
+            <!-- التوقيع -->
             <div class="signature-area">
-                <div class="text-center min-w-[220px]">
-                    <div class="side-label !rounded-none !w-full">المشرف/ة التربوي/ة</div>
-                    <div class="pt-4">
-                        <span id="out-supervisor" class="font-bold border-b border-black px-4 pb-1 text-[19px] text-black text-center inline-block min-w-[160px]"></span>
-                    </div>
+                <div class="text-center">
+                    <div class="bg-[#248fb2] text-white px-8 py-2 font-bold mb-4">المشرف/ة التربوي/ة</div>
+                    <div id="out-supervisor" class="font-bold text-xl border-b border-black px-6"></div>
                 </div>
             </div>
 
-            <div class="footer-line">
+            <!-- الفوتر -->
+            <div class="footer-line mt-auto">
                 WWW.MOE.GOV.SA
             </div>
         </div>
     </div>
-</div>
 
 <script>
-    const fieldsMap = {
-        'in-school': 'out-school', 'in-title': 'out-title', 'in-day': 'out-day', 'in-date': 'out-date',
-        'in-duration': 'out-duration', 'in-location': 'out-location', 'in-target': 'out-target',
-        'in-count': 'out-count', 'in-field': 'out-field', 'in-evidence-type': 'out-evidence-type',
-        'in-goals': 'out-goals', 'in-indicators': 'out-indicators', 'in-steps': 'out-steps', 'in-supervisor': 'out-supervisor'
-    };
-
-    Object.keys(fieldsMap).forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', (e) => {
-                document.getElementById(fieldsMap[id]).innerText = e.target.value;
+    // ربط الحقول
+    const fields = ['school', 'title', 'day', 'date', 'duration', 'location', 'target', 'count', 'field', 'evidence-type', 'goals', 'steps', 'supervisor'];
+    fields.forEach(f => {
+        const input = document.getElementById(`in-${f}`);
+        if(input) {
+            input.addEventListener('input', () => {
+                document.getElementById(`out-${f}`).innerText = input.value;
             });
         }
     });
 
+    // معالجة الرابط
     document.getElementById('in-evidence-link').addEventListener('input', (e) => {
-        const link = e.target.value;
-        const container = document.getElementById('out-evidence-link-container');
-        const text = document.getElementById('out-evidence-link-text');
-        if (link.trim() !== "") {
-            container.classList.remove('hidden');
-            text.innerText = link;
+        const val = e.target.value;
+        const box = document.getElementById('out-link-box');
+        const txt = document.getElementById('out-link-text');
+        if(val.trim()) {
+            box.classList.remove('hidden');
+            txt.innerText = val;
         } else {
-            container.classList.add('hidden');
+            box.classList.add('hidden');
         }
     });
 
+    // معالجة الصور
     document.getElementById('image-upload').addEventListener('change', function(e) {
         const container = document.getElementById('evidence-container');
-        if (e.target.files.length > 0) {
-            Array.from(e.target.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const div = document.createElement('div');
-                    div.className = 'evidence-item shadow-sm';
-                    div.innerHTML = `<img src="${event.target.result}" alt="شاهد">`;
-                    container.appendChild(div);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
+        Array.from(e.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const div = document.createElement('div');
+                div.className = 'evidence-item shadow-sm border';
+                div.innerHTML = `<img src="${ev.target.result}">`;
+                container.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
     });
 
-    async function exportToPDF() {
-        const btn = document.querySelector('button[onclick="exportToPDF()"]');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "جاري الحفظ والربط...";
+    async function exportFlexiblePDF() {
+        const btn = document.querySelector('button');
+        btn.innerText = "جاري الحفظ...";
         btn.disabled = true;
-        
-        const element = document.getElementById('capture-report');
-        const linkElement = document.getElementById('out-evidence-link-text');
+
+        const report = document.getElementById('capture-report');
+        const linkText = document.getElementById('out-link-text');
         const linkUrl = document.getElementById('in-evidence-link').value;
 
         try {
-            // حساب إحداثيات الرابط لجعله تفاعلياً
-            let linkData = null;
-            if (linkUrl.trim() !== "") {
-                const rect = linkElement.getBoundingClientRect();
-                const reportRect = element.getBoundingClientRect();
-                linkData = {
-                    x: ((rect.left - reportRect.left) / reportRect.width) * 210,
-                    y: ((rect.top - reportRect.top) / reportRect.height) * 297,
-                    w: (rect.width / reportRect.width) * 210,
-                    h: (rect.height / reportRect.height) * 297
-                };
-            }
-
-            const canvas = await html2canvas(element, { 
-                scale: 3, 
+            const canvas = await html2canvas(report, {
+                scale: 2,
                 useCORS: true,
                 backgroundColor: '#ffffff'
             });
 
-            const imgData = canvas.toDataURL('image/png', 1.0);
+            const imgData = canvas.toDataURL('image/jpeg', 0.9);
             const { jsPDF } = window.jspdf;
+            
             const pdf = new jsPDF('p', 'mm', 'a4');
-            pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const imgWidth = pageWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            let heightLeft = imgHeight;
+            let position = 0;
 
-            // تفعيل الرابط في ملف الـ PDF
-            if (linkData) {
-                pdf.link(linkData.x, linkData.y, linkData.w, linkData.h, { url: linkUrl });
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+            
+            // إضافة الرابط التفاعلي في الصفحة الأولى
+            if (linkUrl.trim()) {
+                const rect = linkText.getBoundingClientRect();
+                const repRect = report.getBoundingClientRect();
+                const lx = ((rect.left - repRect.left) / repRect.width) * pageWidth;
+                const ly = ((rect.top - repRect.top) / repRect.height) * pageHeight;
+                pdf.link(lx, ly, (rect.width/repRect.width)*pageWidth, (rect.height/repRect.height)*pageHeight, { url: linkUrl });
             }
 
-            pdf.save(`تقرير_${document.getElementById('in-title').value || 'المدينة_المنورة'}.pdf`);
-        } catch (error) { 
-            console.error(error);
+            heightLeft -= pageHeight;
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save(`تقرير_${document.getElementById('in-title').value || 'المدينة'}.pdf`);
+        } catch (err) {
+            console.error(err);
         } finally {
-            btn.innerHTML = originalText;
+            btn.innerText = "تصدير PDF (رسمي)";
             btn.disabled = false;
         }
     }
