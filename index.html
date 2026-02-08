@@ -171,6 +171,11 @@
                 <label class="block text-xs font-bold text-gray-600 mb-1">الأهداف</label>
                 <textarea id="in-goals" class="w-full border p-2 rounded text-xs h-16"></textarea>
             </div>
+            <!-- حقل الإدخال الجديد: المؤشرات المستهدفة -->
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">المؤشرات المستهدفة</label>
+                <textarea id="in-indicators" class="w-full border p-2 rounded text-xs h-16"></textarea>
+            </div>
             <div>
                 <label class="block text-xs font-bold text-gray-600 mb-1">الإجراءات المتخذة</label>
                 <textarea id="in-steps" class="w-full border p-2 rounded text-xs h-32"></textarea>
@@ -232,6 +237,12 @@
                 <div id="out-goals" class="side-content whitespace-pre-wrap"></div>
             </div>
 
+            <!-- عرض القسم الجديد: المؤشرات المستهدفة -->
+            <div class="side-section">
+                <div class="side-label">المؤشرات المستهدفة</div>
+                <div id="out-indicators" class="side-content whitespace-pre-wrap"></div>
+            </div>
+
             <div class="side-section">
                 <div class="side-label">الإجراءات المتخذة</div>
                 <div id="out-steps" class="side-content whitespace-pre-wrap"></div>
@@ -266,12 +277,13 @@
 
 <script>
     // ربط الحقول
-    const fields = ['school', 'title', 'day', 'date', 'duration', 'location', 'target', 'count', 'field', 'evidence-type', 'goals', 'steps', 'supervisor'];
+    const fields = ['school', 'title', 'day', 'date', 'duration', 'location', 'target', 'count', 'field', 'evidence-type', 'goals', 'indicators', 'steps', 'supervisor'];
     fields.forEach(f => {
         const input = document.getElementById(`in-${f}`);
         if(input) {
             input.addEventListener('input', () => {
-                document.getElementById(`out-${f}`).innerText = input.value;
+                const out = document.getElementById(`out-${f}`);
+                if (out) out.innerText = input.value;
             });
         }
     });
