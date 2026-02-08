@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير الإدارة العامة للتعليم بالمدينة المنورة - تنسيق متوسط</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --edu-blue: #248fb2; 
+        }
+        body {
+            font-family: 'Sakkal Majalla', 'Amiri', serif;
+            background-color: #cbd5e1;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .report-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 15mm;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header-text {
+            line-height: 1.8; 
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            text-align: center;
+        }
+
+        .edu-table-main {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 15px;
+        }
+        
+        .edu-table-main th {
+            background-color: var(--edu-blue);
+            color: white;
+            border: 1px solid white;
+            padding: 0;
+            font-size: 17px; 
+            font-weight: bold;
+            height: 45px;
+            vertical-align: middle;
+        }
+        .edu-table-main th div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
+
+        .edu-table-main td {
+            background-color: #e2e8f0; 
+            border: 1px solid white;
+            padding: 6px;
+            height: 45px;
+            text-align: center;
+            font-size: 17px;
+            color: #000;
+            line-height: 1.2;
+            vertical-align: middle;
+        }
+        .edu-table-main td span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            width: 100%;
+        }
+
+        .side-section {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }
+        
+        .side-label {
+            background-color: var(--edu-blue);
+            color: white;
+            width: fit-content;
+            min-width: 160px;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 4px 0 0 4px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .side-content {
+            padding: 12px 10px;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            width: 100%;
+            min-height: 50px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-word;
+        }
+
+        .footer-line {
+            position: absolute;
+            bottom: 8mm;
+            left: 15mm;
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            padding: 10px 0;
+        }
+        .evidence-item {
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            aspect-ratio: 4/3;
+            background-color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .evidence-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .no-print { font-family: 'Noto Kufi Arabic', sans-serif; }
+
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+            .report-page { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden">
+
+<div class="flex h-full">
+    
+    <!-- لوحة إدخال البيانات -->
+    <div class="w-[420px] bg-white border-l shadow-xl z-10 overflow-y-auto no-print p-5">
+        <h2 class="text-lg font-bold mb-4 text-[#248fb2] flex items-center gap-2 border-b pb-3">
+            <span>📝 بيانات التقرير</span>
+        </h2>
+        
+        <div class="space-y-4 text-right">
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">اسم المدرسة</label>
+                <input type="text" id="in-school" class="w-full border border-gray-300 p-2 rounded text-sm focus:border-blue-500 outline-none" placeholder="اكتب اسم المدرسة">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">عنوان التقرير</label>
+                <input type="text" id="in-title" class="w-full border border-gray-300 p-2 rounded text-sm font-bold" placeholder="أدخل العنوان الرئيسي للتقرير">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded border border-slate-200">
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">اليوم</label><input type="text" id="in-day" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">التاريخ</label><input type="date" id="in-date" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">مدة التنفيذ</label><input type="text" id="in-duration" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">مكان التنفيذ</label><input type="text" id="in-location" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">المستفيدون</label><input type="text" id="in-target" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">عدد المستفيدين</label><input type="text" id="in-count" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">المجال الإشرافي</label><input type="text" id="in-field" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">نوع الشاهد</label><input type="text" id="in-evidence-type" class="w-full border border-gray-300 p-2 rounded text-sm"></div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">الأهداف</label>
+                <textarea id="in-goals" class="w-full border border-gray-300 p-2 rounded text-xs h-16"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">المؤشرات المستهدفة</label>
+                <textarea id="in-indicators" class="w-full border border-gray-300 p-2 rounded text-xs h-16"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">الإجراءات المتخذة</label>
+                <textarea id="in-steps" class="w-full border border-gray-300 p-2 rounded text-xs h-24"></textarea>
+            </div>
+
+            <div class="border-2 border-dashed border-gray-200 p-3 rounded text-center">
+                <label class="block text-xs font-bold mb-2">إضافة شواهد (صور)</label>
+                <input type="file" id="image-upload" accept="image/*" multiple class="text-[10px]">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">المشرف/ة التربوي/ة</label>
+                <input type="text" id="in-supervisor" class="w-full border border-gray-300 p-2 rounded text-sm font-bold">
+            </div>
+
+            <button onclick="exportToPDF()" class="w-full bg-[#248fb2] text-white font-bold py-4 rounded-lg hover:bg-sky-700 shadow-md transition-all mt-2 active:scale-95">
+                تصدير التقرير (PDF)
+            </button>
+        </div>
+    </div>
+
+    <!-- مساحة المعاينة -->
+    <div class="flex-1 overflow-y-auto p-4 flex justify-center">
+        <div id="capture-report" class="report-page">
+            
+            <!-- الهيدر النصي - تم حذف النقطتين الرأسيتين -->
+            <div class="flex flex-col items-center mb-8 border-b-2 border-slate-200 pb-4">
+                <div class="header-text">
+                    <div class="text-lg">وزارة التعليم</div>
+                    <div class="text-lg">الإدارة العامة للتعليم بمنطقة المدينة المنورة</div>
+                    <div class="mt-1 text-lg">المدرسة <span id="out-school" class="font-normal underline underline-offset-4 decoration-slate-300"></span></div>
+                </div>
+            </div>
+
+            <!-- عنوان التقرير -->
+            <div class="text-center mb-8">
+                <h1 id="out-title" class="text-3xl font-bold text-slate-800 border-b-4 border-slate-800 inline-block px-16 py-1">عنوان التقرير</h1>
+            </div>
+
+            <!-- الجدول المدمج -->
+            <table class="edu-table-main">
+                <thead>
+                    <tr>
+                        <th><div>اليوم</div></th>
+                        <th><div>التاريخ</div></th>
+                        <th><div>مدة التنفيذ</div></th>
+                        <th><div>مكان التنفيذ</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="out-day"></td>
+                        <td id="out-date"></td>
+                        <td id="out-duration"></td>
+                        <td id="out-location"></td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th><div>المستفيدون</div></th>
+                        <th><div>عدد المستفيدين</div></th>
+                        <th><div>المجال الإشرافي</div></th>
+                        <th><div>نوع الشاهد</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="out-target"></td>
+                        <td id="out-count"></td>
+                        <td id="out-field"></td>
+                        <td id="out-evidence-type"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- الأقسام -->
+            <div class="side-section">
+                <div class="side-label">الأهداف</div>
+                <div id="out-goals" class="side-content whitespace-pre-wrap"></div>
+            </div>
+
+            <div class="side-section">
+                <div class="side-label">المؤشرات المستهدفة</div>
+                <div id="out-indicators" class="side-content whitespace-pre-wrap"></div>
+            </div>
+
+            <div class="side-section">
+                <div class="side-label">الإجراءات المتخذة</div>
+                <div id="out-steps" class="side-content whitespace-pre-wrap" style="min-height: 140px;"></div>
+            </div>
+
+            <div class="side-section">
+                <div class="side-label">المرفقات والشواهد</div>
+                <div class="side-content bg-slate-50 border-dashed border-2 border-slate-200" style="min-height: 180px;">
+                    <div id="evidence-container" class="evidence-grid"></div>
+                </div>
+            </div>
+
+            <!-- التوقيع -->
+            <div class="mt-12 flex justify-end">
+                <div class="text-center min-w-[250px]">
+                    <div class="side-label !rounded-none !w-full">المشرف/ة التربوي/ة</div>
+                    <div class="pt-5 flex justify-center items-center">
+                        <span id="out-supervisor" class="font-bold border-b-2 border-slate-800 px-4 pb-1 text-[20px] text-black text-center inline-block min-w-[180px]"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الفوتر -->
+            <div class="footer-line">
+                <div class="w-3.5 h-3.5 bg-[#248fb2] flex items-center justify-center text-white rounded-[2px] text-[7px]">🌐</div>
+                WWW.MOE.GOV.SA
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function convertToHijri(dateString) {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-uma', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+        }).format(date) + " هـ";
+    }
+
+    const fieldsMap = {
+        'in-school': 'out-school',
+        'in-title': 'out-title',
+        'in-day': 'out-day',
+        'in-date': 'out-date',
+        'in-duration': 'out-duration',
+        'in-location': 'out-location',
+        'in-target': 'out-target',
+        'in-count': 'out-count',
+        'in-field': 'out-field',
+        'in-evidence-type': 'out-evidence-type',
+        'in-goals': 'out-goals',
+        'in-indicators': 'out-indicators',
+        'in-steps': 'out-steps',
+        'in-supervisor': 'out-supervisor'
+    };
+
+    Object.keys(fieldsMap).forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', (e) => {
+                const outElement = document.getElementById(fieldsMap[id]);
+                let val = e.target.value;
+                if (id === 'in-date' && val) val = convertToHijri(val);
+                outElement.innerText = val;
+            });
+        }
+    });
+
+    document.getElementById('image-upload').addEventListener('change', function(e) {
+        const container = document.getElementById('evidence-container');
+        if (e.target.files.length > 0) {
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const div = document.createElement('div');
+                    div.className = 'evidence-item';
+                    div.innerHTML = `<img src="${event.target.result}" alt="شاهد">`;
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    });
+
+    async function exportToPDF() {
+        const btn = document.querySelector('button[onclick="exportToPDF()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "جاري الحفظ بدقة عالية...";
+        btn.disabled = true;
+        
+        const element = document.getElementById('capture-report');
+        try {
+            const canvas = await html2canvas(element, { 
+                scale: 3, 
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+            pdf.save(`تقرير_${document.getElementById('in-title').value || 'المدينة_المنورة'}.pdf`);
+        } catch (error) { 
+            console.error("PDF Export Error:", error);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
