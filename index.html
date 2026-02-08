@@ -7,10 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- مكتبة التقويم الهجري -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hijri-datepicker/dist/css/bootstrap-datepicker.min.css">
-    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -112,13 +108,44 @@
             word-break: break-word;
         }
 
-        /* تنسيق حقل التاريخ ليظهر أيقونة التقويم */
-        .hijri-picker-input {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' /%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: left 8px center;
-            background-size: 18px;
-            cursor: pointer;
+        /* شبكة الصور الموحدة */
+        .evidence-grid {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 5px;
+            grid-template-columns: repeat(4, 120px); 
+        }
+        
+        .evidence-item {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .evidence-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .signature-area {
+            margin-top: auto; 
+            display: flex;
+            justify-content: flex-start;
+            padding-bottom: 20px;
+        }
+
+        .footer-line {
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+            font-family: sans-serif;
         }
 
         .no-print { font-family: 'Noto Kufi Arabic', sans-serif; }
@@ -152,11 +179,7 @@
 
             <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded border border-slate-200">
                 <div><label class="block text-[11px] font-bold text-gray-500 mb-1">اليوم</label><input type="text" id="in-day" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">التاريخ</label>
-                    <!-- حقل التاريخ مع خاصية type="text" ليتوافق مع مكتبات التقويم الهجري -->
-                    <input type="text" id="in-date" class="w-full border border-gray-300 p-2 rounded text-sm text-black focus:ring-1 focus:ring-gray-400 hijri-picker-input" placeholder="اختر التاريخ الهجري">
-                </div>
+                <div><label class="block text-[11px] font-bold text-gray-500 mb-1">التاريخ</label><input type="text" id="in-date" class="w-full border border-gray-300 p-2 rounded text-sm text-black" placeholder="مثال: 1446/08/01"></div>
                 <div><label class="block text-[11px] font-bold text-gray-500 mb-1">مدة التنفيذ</label><input type="text" id="in-duration" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
                 <div><label class="block text-[11px] font-bold text-gray-500 mb-1">مكان التنفيذ</label><input type="text" id="in-location" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
                 <div><label class="block text-[11px] font-bold text-gray-500 mb-1">المستفيدون</label><input type="text" id="in-target" class="w-full border border-gray-300 p-2 rounded text-sm text-black"></div>
@@ -182,7 +205,7 @@
                 <label class="block text-xs font-bold text-sky-800 mb-2">الشواهد والمرفقات</label>
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-[10px] text-gray-500 mb-1">رابط الشواهد</label>
+                        <label class="block text-[10px] text-gray-500 mb-1">رابط الشواهد (سيكون تفاعلياً في PDF)</label>
                         <input type="url" id="in-evidence-link" class="w-full border border-gray-300 p-2 rounded text-xs text-black" placeholder="https://...">
                     </div>
                     <div>
@@ -249,12 +272,11 @@
 
             <div class="side-section">
                 <div class="side-label">المرفقات والشواهد</div>
-                <div class="side-content bg-slate-50 border-dashed border border-slate-200 flex-col gap-2" style="min-height: 140px; padding: 10px;">
+                <div class="side-content bg-slate-50 border-dashed border border-slate-200 flex-col gap-2" style="min-height: 160px; padding: 10px;">
                     <div id="out-evidence-link-container" class="hidden w-full flex justify-center pb-2">
-                        <div class="link-badge">
-                            <span class="text-lg">🔗</span>
-                            <span>رابط الشواهد:</span>
-                            <span id="out-evidence-link-text" class="font-normal underline break-all max-w-[400px]"></span>
+                        <div class="text-[13px] text-blue-700 font-bold">
+                            <span>🔗 رابط الشواهد:</span>
+                            <span id="out-evidence-link-text" class="underline break-all font-normal"></span>
                         </div>
                     </div>
                     <div id="evidence-container" class="evidence-grid"></div>
@@ -271,39 +293,15 @@
             </div>
 
             <div class="footer-line">
-                <div class="w-3 h-3 bg-[#248fb2] flex items-center justify-center text-white rounded-[2px] text-[6px]">🌐</div>
                 WWW.MOE.GOV.SA
             </div>
         </div>
     </div>
 </div>
 
-<!-- تضمين مكتبة التقويم الهجري والاعتماديات -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment-hijri@2.1.2/moment-hijri.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hijri-datepicker/dist/js/bootstrap-hijri-datepicker.min.js"></script>
-
 <script>
-    // تفعيل التقويم الهجري
-    $(function () {
-        $("#in-date").hijriDatePicker({
-            hijri: true, // تفعيل الوضع الهجري
-            format: "iYYYY/iMM/iDD", // صيغة التاريخ الهجري
-            showSwitcher: false, // إخفاء زر التحويل للميلادي
-            allowInputToggle: true,
-            useCurrent: true,
-            isRTL: true
-        });
-
-        // ربط القيمة المختارة بالمعاينة
-        $("#in-date").on('dp.change', function (e) {
-            document.getElementById('out-date').innerText = e.date.format("iYYYY/iMM/iDD") + " هـ";
-        });
-    });
-
     const fieldsMap = {
-        'in-school': 'out-school', 'in-title': 'out-title', 'in-day': 'out-day',
+        'in-school': 'out-school', 'in-title': 'out-title', 'in-day': 'out-day', 'in-date': 'out-date',
         'in-duration': 'out-duration', 'in-location': 'out-location', 'in-target': 'out-target',
         'in-count': 'out-count', 'in-field': 'out-field', 'in-evidence-type': 'out-evidence-type',
         'in-goals': 'out-goals', 'in-indicators': 'out-indicators', 'in-steps': 'out-steps', 'in-supervisor': 'out-supervisor'
@@ -313,8 +311,7 @@
         const input = document.getElementById(id);
         if (input) {
             input.addEventListener('input', (e) => {
-                const outElement = document.getElementById(fieldsMap[id]);
-                outElement.innerText = e.target.value;
+                document.getElementById(fieldsMap[id]).innerText = e.target.value;
             });
         }
     });
@@ -338,7 +335,7 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const div = document.createElement('div');
-                    div.className = 'evidence-item';
+                    div.className = 'evidence-item shadow-sm';
                     div.innerHTML = `<img src="${event.target.result}" alt="شاهد">`;
                     container.appendChild(div);
                 };
@@ -350,20 +347,43 @@
     async function exportToPDF() {
         const btn = document.querySelector('button[onclick="exportToPDF()"]');
         const originalText = btn.innerHTML;
-        btn.innerHTML = "جاري الحفظ...";
+        btn.innerHTML = "جاري الحفظ والربط...";
         btn.disabled = true;
         
         const element = document.getElementById('capture-report');
+        const linkElement = document.getElementById('out-evidence-link-text');
+        const linkUrl = document.getElementById('in-evidence-link').value;
+
         try {
+            // حساب إحداثيات الرابط لجعله تفاعلياً
+            let linkData = null;
+            if (linkUrl.trim() !== "") {
+                const rect = linkElement.getBoundingClientRect();
+                const reportRect = element.getBoundingClientRect();
+                linkData = {
+                    x: ((rect.left - reportRect.left) / reportRect.width) * 210,
+                    y: ((rect.top - reportRect.top) / reportRect.height) * 297,
+                    w: (rect.width / reportRect.width) * 210,
+                    h: (rect.height / reportRect.height) * 297
+                };
+            }
+
             const canvas = await html2canvas(element, { 
                 scale: 3, 
                 useCORS: true,
                 backgroundColor: '#ffffff'
             });
+
             const imgData = canvas.toDataURL('image/png', 1.0);
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+
+            // تفعيل الرابط في ملف الـ PDF
+            if (linkData) {
+                pdf.link(linkData.x, linkData.y, linkData.w, linkData.h, { url: linkUrl });
+            }
+
             pdf.save(`تقرير_${document.getElementById('in-title').value || 'المدينة_المنورة'}.pdf`);
         } catch (error) { 
             console.error(error);
